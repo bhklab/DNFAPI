@@ -1,5 +1,7 @@
 getSmallNetwork <- function() {
-  return(applyCommunity(default_integrated_matrix)[0:100, 0:100])
+  result <- applyCommunity(default_integrated_matrix)[0:100, 0:100]
+  impact <- list(item=0) # A list containing the influence of each data type on each connection
+  return(list(impact=impact, result=result))
 }
 
 getBigNetwork <- function() {
