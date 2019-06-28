@@ -4,6 +4,13 @@ getSmallNetwork <- function() {
   return(list(impact=impact, result=result))
 }
 
+#' Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix
+#'
+#' @importFrom grDevices rgb2hsv
+#'
+#' @return The default integrated matrix
+#'
+#' @export
 getBigNetwork <- function() {
   result <- applyCommunity(default_integrated_matrix)
   impact <- list(item=0) # A list containing the influence of each data type on each connection
@@ -24,6 +31,13 @@ getBigNetwork <- function() {
   return(list(impact=impact, result=result))
 }
 
+#' Returns the a small network
+#'
+#' @param newData User's own data in JSON format (converted to an R data type)
+#'
+#' @return The new network
+#'
+#' @export
 getNewNetwork <- function(newData) {
   return(getSmallNetwork())
 }
@@ -58,8 +72,14 @@ applyCommunity <- function(data){
   return(data[finalDrugs, finalDrugs])
 }
 
-# Find the targets of a drug
+#' Returns information related to a drug
+#'
+#' @param drug The name of the drug
+#' @return The CHEMBL ID of the drug as well as a list of drug targets
+#'
+#' @export
 getDrugInfo <- function(drug){
+
   #Get all the targets from the dataframe
   allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug), ]
   if (nrow(allDrugInfo) == 0){
