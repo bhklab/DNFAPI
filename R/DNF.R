@@ -79,6 +79,9 @@ applyCommunity <- function(data){
 #'
 #' @export
 getDrugInfo <- function(drug){
+  badchars <- "[\xb5]|[\n]|[,]|[;]|[:]|[-]|[+]|[*]|[%]|[$]|[#]|[{]|[}]|[[]|[]]|[|]|[\\^]|[/]|[\\]|[.]|[_]|[ ]"
+  drugTargetInfo$MOLECULE_NAME <- gsub(badchars, "", drugTargetInfo$MOLECULE_NAME)
+
   drug <- tolower(drug) #turn the drug name to lowercase for easy matching
 
   #Get all the targets from the dataframe
