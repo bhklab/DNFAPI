@@ -3,4 +3,6 @@
 export(getBigNetwork)
 export(getDrugInfo)
 export(getNewNetwork)
+export(multiJsonInput)
+import(stringr)
 importFrom(grDevices,rgb2hsv)

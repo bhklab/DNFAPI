@@ -46,12 +46,21 @@ jsonInput <- function(input){
   return(input[1,1])
 }
 
-multiJsonInput <- function(data, ...){
-  first <- list(...)[1]
-  x = c("input1")[1]
-  #return(as.data.frame(first$input1))
-  #return(names(first))
-  return(first["input1"])
+#' Test
+#' @import stringr
+#'
+#' @param ... A list of JSON-formatted objects.
+#'
+#' @return Test
+#'
+#' @export
+multiJsonInput <- function(...){
+  dataNames <- names(list(...))
+  structure <- as.data.frame(list(...)[dataNames[1]])
+  perturbation <- as.data.frame(list(...)[dataNames[2]])
+  colnames(perturbation) <- str_remove_all(colnames(perturbation), paste(dataNames[2], ".", sep=""))
+  sensitivity <- as.data.frame(list(...)[dataNames[3]])
+  return(list(structure, perturbation, sensitivity))
 }
 
 readFile <- function(name){
