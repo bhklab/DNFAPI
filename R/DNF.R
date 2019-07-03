@@ -79,6 +79,7 @@ applyCommunity <- function(data){
 #'
 #' @export
 getDrugInfo <- function(drug){
+  drug <- tolower(drug) #turn the drug name to lowercase for easy matching
 
   #Get all the targets from the dataframe
   allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug), ]
