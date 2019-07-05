@@ -97,3 +97,29 @@ getDrugInfo <- function(drug){
 
   return(append(id, drugTargets))
 }
+
+#' Returns the drugs with input targets
+#'
+#' @param targets The names of the drug targets
+#' @return A list of drugs
+#'
+#' @export
+getDrugsOfTargets <- function(targets){
+
+  #drugTargetInfo$MOLECULE_NAME <- gsub(badchars, "", drugTargetInfo$MOLECULE_NAME)
+
+  targets <- toupper(targets) #turn the target name to uppercase for easy matching
+
+  #Get all the targets from the dataframe
+  allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'TARGET_NAME'] %in% targets), ]
+  if (nrow(allDrugInfo) == 0){
+    return(c())
+  }
+
+  uniqueDrugs <- unique(allDrugInfo[['MOLECULE_NAME']])
+
+  badchars <- "[\xb5]|[\n]|[,]|[;]|[:]|[-]|[+]|[*]|[%]|[$]|[#]|[{]|[}]|[[]|[]]|[|]|[\\^]|[/]|[\\]|[.]|[_]|[ ]"
+  uniqueDrugsE <- gsub(badchars, "", uniqueDrugs)
+
+  return(toupper(uniqueDrugs))
+}
