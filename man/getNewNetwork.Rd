@@ -4,10 +4,7 @@
 \alias{getNewNetwork}
 \title{Returns the a small network}
 \usage{
-getNewNetwork(newData)
-}
-\arguments{
-\item{newData}{User's own data in JSON format (converted to an R data type)}
+getNewNetwork(...)
 }
 \value{
 The new network

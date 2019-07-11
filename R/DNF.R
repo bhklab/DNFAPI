@@ -32,39 +32,30 @@ getBigNetwork <- function() {
 }
 
 #' Returns the a small network
-#'
-#' @param newData User's own data in JSON format (converted to an R data type)
+#' @importFrom stringr str_remove_all
 #'
 #' @return The new network
 #'
 #' @export
-getNewNetwork <- function(newData) {
-  return(getSmallNetwork())
-}
-
-jsonInput <- function(input){
-  return(input[1,1])
-}
-
-#' Test
-#' @import stringr
-#'
-#' @param ... A list of JSON-formatted objects.
-#'
-#' @return Test
-#'
-#' @export
-multiJsonInput <- function(...){
+getNewNetwork <- function(...) {
   dataNames <- names(list(...))
-  structure <- as.data.frame(list(...)[dataNames[1]])
-  perturbation <- as.data.frame(list(...)[dataNames[2]])
-  colnames(perturbation) <- str_remove_all(colnames(perturbation), paste(dataNames[2], ".", sep=""))
-  sensitivity <- as.data.frame(list(...)[dataNames[3]])
-  return(list(structure, perturbation, sensitivity))
-}
+  sensitivity <- as.data.frame(list(...)[dataNames[2]], stringsAsFactors=FALSE)
+  colnames(sensitivity) <- str_remove_all(colnames(sensitivity), paste(dataNames[2], ".", sep=""))
+  rownames(sensitivity) <- sensitivity$RowName
+  sensitivity$RowName <- NULL
+  sensitivity <- as.matrix(as.numeric(as.character(sensitivity)))
 
-readFile <- function(name){
-  return(read.csv(name))
+  perturbation <- as.data.frame(list(...)[dataNames[1]], stringsAsFactors=FALSE)
+  colnames(perturbation) <- str_remove_all(colnames(perturbation), paste(dataNames[1], ".", sep=""))
+  rownames(perturbation) <- perturbation$RowName
+  perturbation$RowName <- NULL
+  perturbation <- as.numeric(as.character(perturbation))
+
+  structure <- as.data.frame(list(...)[dataNames[3]], stringsAsFactors=FALSE)
+  colnames(structure) <- str_remove_all(colnames(structure), paste(dataNames[3], ".", sep=""))
+  rownames(structure) <- structure$RowName
+  structure$RowName <- NULL
+  return(as.data.frame(integrator(structure, perturbation, sensitivity)))
 }
 
 #Add 1 to all drugs that interact with a representative community drug
