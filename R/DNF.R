@@ -1,18 +1,10 @@
-getSmallNetwork <- function() {
-  result <- applyCommunity(default_integrated_matrix)[0:100, 0:100]
-  impact <- list(item=0) # A list containing the influence of each data type on each connection
-  return(list(impact=impact, result=result))
-}
-
 #' Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix
-#'
-#' @importFrom grDevices rgb2hsv
 #'
 #' @return The default integrated matrix
 #'
 #' @export
 getBigNetwork <- function() {
-  result <- applyCommunity(default_integrated_matrix)
+  result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
   impact <- list(item=0) # A list containing the influence of each data type on each connection
   # numDrugs <- ncol(result)
   # impact1 <- matrix(rexp(numDrugs * numDrugs, rate=.1), ncol=numDrugs)
@@ -31,8 +23,9 @@ getBigNetwork <- function() {
   return(list(impact=impact, result=result))
 }
 
-#' Returns the a small network
+#' Returns a network that integrates all data modalities
 #' @importFrom stringr str_remove_all
+#' @importFrom apcluster apcluster
 #'
 #' @return The new network
 #'
@@ -55,21 +48,8 @@ getNewNetwork <- function(...) {
   colnames(structure) <- str_remove_all(colnames(structure), paste(dataNames[3], ".", sep=""))
   rownames(structure) <- structure$RowName
   structure$RowName <- NULL
-  return(as.data.frame(integrator(structure, perturbation, sensitivity)))
-}
-
-#Add 1 to all drugs that interact with a representative community drug
-applyCommunity <- function(data){
-  finalDrugs <- c()
-  for (row in 1:nrow(data)) {
-    community <- as.character(communities[row, 2:ncol(communities)])
-    representative <- communities[row,2]
-    drugPositions <- which(colnames(default_integrated_matrix) %in% community)
-    data[representative, drugPositions] <- data[representative, drugPositions] + 1
-    finalDrugs <- append(finalDrugs, drugPositions)
-  }
-  finalDrugs <- sort(unique(finalDrugs))
-  return(data[finalDrugs, finalDrugs])
+  integrated <- integrator(structure, perturbation, sensitivity)
+  return(as.data.frame(communityAugment(integrated, GMT_TARG)))
 }
 
 #' Returns information related to a drug

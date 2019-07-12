@@ -2,7 +2,7 @@
 % Please edit documentation in R/DNF.R
 \name{getNewNetwork}
 \alias{getNewNetwork}
-\title{Returns the a small network}
+\title{Returns a network that integrates all data modalities}
 \usage{
 getNewNetwork(...)
 }
@@ -10,5 +10,5 @@ getNewNetwork(...)
 The new network
 }
 \description{
-Returns the a small network
+Returns a network that integrates all data modalities
 }
