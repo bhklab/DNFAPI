@@ -54,7 +54,6 @@ communityAugment <- function(network, GMT_TARG) {
 
 #Add 1 to all drugs that interact with a representative community drug
 applyCommunity <- function(network, communities){
-
   #finalDrugs <- c()
   for (row in 1:nrow(communities)) { #iterate through each row of the communities
 

@@ -49,7 +49,9 @@ getNewNetwork <- function(...) {
   rownames(structure) <- structure$RowName
   structure$RowName <- NULL
   integrated <- integrator(structure, perturbation, sensitivity)
-  return(as.data.frame(communityAugment(integrated, GMT_TARG)))
+  integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
+  impact <- list(item=0) # A list containing the influence of each data type on each connection
+  return(list(impact=impact, result=integrated))
 }
 
 #' Returns information related to a drug
