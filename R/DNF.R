@@ -1,18 +1,10 @@
-getSmallNetwork <- function() {
-  result <- applyCommunity(default_integrated_matrix)[0:100, 0:100]
-  impact <- list(item=0) # A list containing the influence of each data type on each connection
-  return(list(impact=impact, result=result))
-}
-
 #' Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix
-#'
-#' @importFrom grDevices rgb2hsv
 #'
 #' @return The default integrated matrix
 #'
 #' @export
 getBigNetwork <- function() {
-  result <- applyCommunity(default_integrated_matrix)
+  result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
   impact <- list(item=0) # A list containing the influence of each data type on each connection
   # numDrugs <- ncol(result)
   # impact1 <- matrix(rexp(numDrugs * numDrugs, rate=.1), ncol=numDrugs)
@@ -31,45 +23,35 @@ getBigNetwork <- function() {
   return(list(impact=impact, result=result))
 }
 
-#' Returns the a small network
-#'
-#' @param newData User's own data in JSON format (converted to an R data type)
+#' Returns a network that integrates all data modalities
+#' @importFrom stringr str_remove_all
+#' @importFrom apcluster apcluster
 #'
 #' @return The new network
 #'
 #' @export
-getNewNetwork <- function(newData) {
-  return(getSmallNetwork())
-}
+getNewNetwork <- function(...) {
+  dataNames <- names(list(...))
+  sensitivity <- as.data.frame(list(...)[dataNames[2]], stringsAsFactors=FALSE)
+  colnames(sensitivity) <- str_remove_all(colnames(sensitivity), paste(dataNames[2], ".", sep=""))
+  rownames(sensitivity) <- sensitivity$RowName
+  sensitivity$RowName <- NULL
+  sensitivity <- as.matrix(as.numeric(as.character(sensitivity)))
 
-jsonInput <- function(input){
-  return(input[1,1])
-}
+  perturbation <- as.data.frame(list(...)[dataNames[1]], stringsAsFactors=FALSE)
+  colnames(perturbation) <- str_remove_all(colnames(perturbation), paste(dataNames[1], ".", sep=""))
+  rownames(perturbation) <- perturbation$RowName
+  perturbation$RowName <- NULL
+  perturbation <- as.numeric(as.character(perturbation))
 
-multiJsonInput <- function(data, ...){
-  first <- list(...)[1]
-  x = c("input1")[1]
-  #return(as.data.frame(first$input1))
-  #return(names(first))
-  return(first["input1"])
-}
-
-readFile <- function(name){
-  return(read.csv(name))
-}
-
-#Add 1 to all drugs that interact with a representative community drug
-applyCommunity <- function(data){
-  finalDrugs <- c()
-  for (row in 1:nrow(data)) {
-    community <- as.character(communities[row, 2:ncol(communities)])
-    representative <- communities[row,2]
-    drugPositions <- which(colnames(default_integrated_matrix) %in% community)
-    data[representative, drugPositions] <- data[representative, drugPositions] + 1
-    finalDrugs <- append(finalDrugs, drugPositions)
-  }
-  finalDrugs <- sort(unique(finalDrugs))
-  return(data[finalDrugs, finalDrugs])
+  structure <- as.data.frame(list(...)[dataNames[3]], stringsAsFactors=FALSE)
+  colnames(structure) <- str_remove_all(colnames(structure), paste(dataNames[3], ".", sep=""))
+  rownames(structure) <- structure$RowName
+  structure$RowName <- NULL
+  integrated <- integrator(structure, perturbation, sensitivity)
+  integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
+  impact <- list(item=0) # A list containing the influence of each data type on each connection
+  return(list(impact=impact, result=integrated))
 }
 
 #' Returns information related to a drug

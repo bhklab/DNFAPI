@@ -2,5 +2,7 @@
 
 export(getBigNetwork)
 export(getDrugInfo)
+export(getDrugsOfTargets)
 export(getNewNetwork)
-importFrom(grDevices,rgb2hsv)
+importFrom(apcluster,apcluster)
+importFrom(stringr,str_remove_all)

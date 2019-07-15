@@ -2,16 +2,13 @@
 % Please edit documentation in R/DNF.R
 \name{getNewNetwork}
 \alias{getNewNetwork}
-\title{Returns the a small network}
+\title{Returns a network that integrates all data modalities}
 \usage{
-getNewNetwork(newData)
-}
-\arguments{
-\item{newData}{User's own data in JSON format (converted to an R data type)}
+getNewNetwork(...)
 }
 \value{
 The new network
 }
 \description{
-Returns the a small network
+Returns a network that integrates all data modalities
 }
