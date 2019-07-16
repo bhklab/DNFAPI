@@ -28,7 +28,6 @@ getBigNetwork <- function() {
 #' @importFrom stringr str_remove_all
 #' @importFrom apcluster apcluster
 #' @import rcdk
-#' @import SNFtool
 #'
 #' @return The new network
 #'
