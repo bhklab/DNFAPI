@@ -32,6 +32,7 @@ getBigNetwork <- function() {
 #'
 #' @export
 getNewNetwork <- function(...) {
+  impact <- list(item=0) # A list containing the influence of each data type on each connection
   dataNames <- names(list(...))
   sensitivity <- as.data.frame(list(...)[dataNames[2]], stringsAsFactors=FALSE)
   colnames(sensitivity) <- str_remove_all(colnames(sensitivity), paste(dataNames[2], ".", sep=""))
@@ -49,9 +50,12 @@ getNewNetwork <- function(...) {
   colnames(structure) <- str_remove_all(colnames(structure), paste(dataNames[3], ".", sep=""))
   rownames(structure) <- structure$RowName
   structure$RowName <- NULL
+
+  result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
+  return(list(impact=impact, result=result))
   integrated <- integrator(structure, perturbation, sensitivity)
   integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
-  impact <- list(item=0) # A list containing the influence of each data type on each connection
+
   return(list(impact=impact, result=integrated))
 }
 
