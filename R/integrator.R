@@ -28,7 +28,7 @@ integrator <- function(struct, perturb, sensi){
   #Load in senstivity, imaging data as well as perturbation signatures
 
   sens.data <- sens
-  pert.data <- pert80 #cbind(pert80, perturb) #PerturbationDataFlexibleCustomSig(pert.file.name)  ## 978 X 23
+  pert.data <- cbind(pert80, perturb) #pert80 # #PerturbationDataFlexibleCustomSig(pert.file.name)  ## 978 X 23
 
   #Subset the lincs metadata file to only the drugs appearing in the sensitivity layer
 
