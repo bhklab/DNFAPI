@@ -14,4 +14,5 @@ Imports:
     SNFtool (>= 2.3.0),
     rcdk (>= 3.4.7.1),
     apcluster (>= 1.4.7),
-    stringr (>= 1.4.0)
+    stringr (>= 1.4.0),
+    rJava (>= 0.9.11)
