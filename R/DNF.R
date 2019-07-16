@@ -1,4 +1,5 @@
 #' Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix
+#' @importFrom apcluster apcluster
 #'
 #' @return The default integrated matrix
 #'
