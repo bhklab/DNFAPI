@@ -27,6 +27,7 @@ getBigNetwork <- function() {
 #' Returns a network that integrates all data modalities
 #' @importFrom stringr str_remove_all
 #' @importFrom apcluster apcluster
+#' @import rcdk
 #'
 #' @return The new network
 #'
@@ -51,8 +52,6 @@ getNewNetwork <- function(...) {
   rownames(structure) <- structure$RowName
   structure$RowName <- NULL
 
-  result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
-  return(list(impact=impact, result=result))
   integrated <- integrator(structure, perturbation, sensitivity)
   integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
 
