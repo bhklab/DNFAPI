@@ -39,7 +39,7 @@ integrator <- function(struct, perturb, sensi){
 
   #Now we create the structure fingerprints based on the subsetted lincs metadata
 
-  strc.data <- StructureDataFlexible(lincs.meta.subset)  ## a vector  --> 239 elemnts
+  strc.data <- strc.data #StructureDataFlexible(lincs.meta.subset)  ## a vector  --> 239 elemnts
 
   ## Find Common Drugs
 

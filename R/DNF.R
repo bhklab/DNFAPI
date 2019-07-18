@@ -27,8 +27,6 @@ getBigNetwork <- function() {
 #' Returns a network that integrates all data modalities
 #' @importFrom stringr str_remove_all
 #' @importFrom apcluster apcluster
-#' @import SNFtool
-#' @import rcdk
 #'
 #' @return The new network
 #'
