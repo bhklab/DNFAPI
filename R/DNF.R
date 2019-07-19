@@ -105,7 +105,7 @@ getDrugsOfTargets <- function(targets){
   uniqueDrugs <- unique(allDrugInfo[['MOLECULE_NAME']])
 
   badchars <- "[\xb5]|[\n]|[,]|[;]|[:]|[-]|[+]|[*]|[%]|[$]|[#]|[{]|[}]|[[]|[]]|[|]|[\\^]|[/]|[\\]|[.]|[_]|[ ]"
-  uniqueDrugsE <- gsub(badchars, "", uniqueDrugs)
+  uniqueDrugs <- gsub(badchars, "", uniqueDrugs)
 
   return(toupper(uniqueDrugs))
 }
