@@ -70,7 +70,7 @@ getDrugInfo <- function(drug){
 
   drug <- tolower(drug) #turn the drug name to lowercase for easy matching
 
-  #Get all the targets from the dataframe
+  #Get all the rows from the drug-info dataframe that match the drug name
   allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug), ]
   if (nrow(allDrugInfo) == 0){
     return(c())
@@ -81,7 +81,18 @@ getDrugInfo <- function(drug){
   #Get the CHEMBL ID
   id <- allDrugInfo[['ID']][1]
 
-  return(append(id, drugTargets))
+  #Get Database of this drug
+  database <- allDrugInfo[['DATABASE']][1]
+  url <- "https://portals.broadinstitute.org/ctrp/?page=#ctd2BodyHome"
+  if (database == 'ChEMBL'){
+    url <- paste0("https://www.ebi.ac.uk/chembl/compound_report_card/", id, "/")
+  } else if (database == 'CLUE.IO'){
+    url <- paste0("https://clue.io/command?q=", allDrugInfo[['MOLECULE_NAME']][1])
+  } else if (database == 'DrugBank'){
+    url <- paste0("https://www.drugbank.ca/drugs/", id)
+  }
+
+  return(list(id=id, targets=drugTargets, link=url))
 }
 
 #' Returns the drugs with input targets
