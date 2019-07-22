@@ -73,7 +73,7 @@ getDrugInfo <- function(drug){
   #Get all the rows from the drug-info dataframe that match the drug name
   allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug), ]
   if (nrow(allDrugInfo) == 0){
-    return(c())
+    return(NULL)
   }
 
   drugTargets <- allDrugInfo[['TARGET_NAME']]
