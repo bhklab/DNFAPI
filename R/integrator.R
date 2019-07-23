@@ -21,9 +21,10 @@ integrator <- function(struct, perturb, sensi){
   badchars <- "[\xb5]|[\n]|[,]|[;]|[:]|[-]|[+]|[*]|[%]|[$]|[#]|[{]|[}]|[[]|[]]|[|]|[\\^]|[/]|[\\]|[.]|[_]|[ ]"
 
   #Load LINCS metadata file. Used it contains the smiles string for the drugs in the perturbation layer. These are then used to construct the structure layer.
-  lincs.meta <- rbind(struct80, struct)
-  lincs.meta$pert_iname <- toupper(lincs.meta$pert_iname)
-  lincs.meta$pert_iname <- gsub(badchars, "", lincs.meta$pert_iname)
+  #The following 3 lines are supposed to be functional, but disabled for bug
+  #lincs.meta <- rbind(struct80, struct)
+  #lincs.meta$pert_iname <- toupper(lincs.meta$pert_iname)
+  #lincs.meta$pert_iname <- gsub(badchars, "", lincs.meta$pert_iname)
 
   #Load in senstivity, imaging data as well as perturbation signatures
 
@@ -33,9 +34,9 @@ integrator <- function(struct, perturb, sensi){
   #Subset the lincs metadata file to only the drugs appearing in the sensitivity layer
 
   sens.names <- rownames(sens.data)
-  #return(list(sens=sens.names, struc=lincs.meta$pert_iname))
-  lincs.meta.subset <- lincs.meta[match(sens.names, lincs.meta$pert_iname),]
-  lincs.meta.subset <- lincs.meta.subset[!is.na(lincs.meta.subset$X),]
+  #The following 2 lines are supposed to be functional, but disabled for bug
+  #lincs.meta.subset <- lincs.meta[match(sens.names, lincs.meta$pert_iname),]
+  #lincs.meta.subset <- lincs.meta.subset[!is.na(lincs.meta.subset$X),]
 
   #Now we create the structure fingerprints based on the subsetted lincs metadata
 
