@@ -92,7 +92,7 @@ getDrugInfo <- function(drug){
     url <- paste0("https://www.drugbank.ca/drugs/", id)
   }
 
-  return(list(id=id, targets=drugTargets, link=url))
+  return(list(id=id, targets=unique(drugTargets), link=url))
 }
 
 #' Returns the drugs with input targets
