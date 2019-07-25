@@ -21,7 +21,14 @@ getBigNetwork <- function() {
   # rownames(impact2) <- colnames(result)
   # colnames(impact3) <- colnames(result)
   # rownames(impact3) <- colnames(result)
-  return(list(impact=impact, result=result))
+
+
+  # Generate the profile for all drugs
+  drugNames <- rownames(result)
+  profiles <- lapply(drugNames, getDrugInfo)
+  names(profiles) <- drugNames
+
+  return(list(impact=impact, result=result, profiles=profiles))
 }
 
 #' Returns a network that integrates all data modalities
@@ -34,6 +41,8 @@ getBigNetwork <- function() {
 #' @export
 getNewNetwork <- function(...) {
   impact <- list(item=0) # A list containing the influence of each data type on each connection
+
+  # Integrate the data
   dataNames <- names(list(...))
   sensitivity <- as.data.frame(list(...)[dataNames[2]], stringsAsFactors=FALSE)
   colnames(sensitivity) <- str_remove_all(colnames(sensitivity), paste(dataNames[2], ".", sep=""))
@@ -55,7 +64,23 @@ getNewNetwork <- function(...) {
   integrated <- integrator(structure, perturbation, sensitivity)
   integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
 
-  return(list(impact=impact, result=integrated))
+  # Generate the profile for all drugs
+  drugNames <- rownames(integrated)
+  profiles <- lapply(drugNames, getDrugInfo)
+
+  return(list(impact=impact, result=integrated, profiles=profiles))
+}
+
+convertToURL <- function(id, drugName, database){
+  if (database == 'CLUE.IO'){
+    return(paste0("https://clue.io/command?q=", drugName))
+  }
+  if (database == 'ChEMBL'){
+    return(paste0("https://www.ebi.ac.uk/chembl/compound_report_card/", id, "/"))
+  }
+  if (database == 'DrugBank'){
+    return(paste0("https://www.drugbank.ca/drugs/", id))
+  }
 }
 
 #' Returns information related to a drug
@@ -70,29 +95,19 @@ getDrugInfo <- function(drug){
 
   drug <- tolower(drug) #turn the drug name to lowercase for easy matching
 
-  #Get all the rows from the drug-info dataframe that match the drug name
-  allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug), ]
+  #Get all rows from the drug-info dataframe that match the drug name
+  allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug & drugTargetInfo[,'DATABASE'] != 'CTRPv2'), ]
   if (nrow(allDrugInfo) == 0){
     return(NULL)
   }
 
   drugTargets <- allDrugInfo[['TARGET_NAME']]
 
-  #Get the CHEMBL ID
-  id <- allDrugInfo[['ID']][1]
+  #Get all the links to drug databases
+  ids <- allDrugInfo[['ID']]
+  links <- mapply(convertToURL, id = ids, drugName=allDrugInfo[['MOLECULE_NAME']], database=allDrugInfo[['DATABASE']])
 
-  #Get Database of this drug
-  database <- allDrugInfo[['DATABASE']][1]
-  url <- "https://portals.broadinstitute.org/ctrp/?page=#ctd2BodyHome"
-  if (database == 'ChEMBL'){
-    url <- paste0("https://www.ebi.ac.uk/chembl/compound_report_card/", id, "/")
-  } else if (database == 'CLUE.IO'){
-    url <- paste0("https://clue.io/command?q=", allDrugInfo[['MOLECULE_NAME']][1])
-  } else if (database == 'DrugBank'){
-    url <- paste0("https://www.drugbank.ca/drugs/", id)
-  }
-
-  return(list(id=id, targets=unique(drugTargets), link=url))
+  return(list(targets=unique(drugTargets), links=unique(links)))
 }
 
 #' Returns the drugs with input targets
@@ -120,3 +135,13 @@ getDrugsOfTargets <- function(targets){
 
   return(toupper(uniqueDrugs))
 }
+
+#' Test function
+#'
+#' @return A list
+#'
+#' @export
+# returnList <- function(){
+#   jaccuzi <- "split"
+#   return(list(list(zerg='zerg', shit=c(12,3,5)), c(1,2,3,4,5,6), nig="yes", $jaccuzi = 'yo'))
+# } #I should use names(lst) <- c("x", "y", "z") to set the names of all drug info objects
