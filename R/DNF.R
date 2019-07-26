@@ -107,7 +107,7 @@ getDrugInfo <- function(drug){
   ids <- allDrugInfo[['ID']]
   links <- mapply(convertToURL, id = ids, drugName=allDrugInfo[['MOLECULE_NAME']], database=allDrugInfo[['DATABASE']])
 
-  return(list(targets=unique(drugTargets), links=unique(links)))
+  return(list(targets=sort(unique(drugTargets)), links=unique(links)))
 }
 
 #' Returns the drugs with input targets
