@@ -4,7 +4,7 @@
 #' @return The default integrated matrix
 #'
 #' @export
-getBigNetwork <- function() {
+getPremadeNetwork <- function() {
   result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
   impact <- list(item=0) # A list containing the influence of each data type on each connection
   # numDrugs <- ncol(result)
