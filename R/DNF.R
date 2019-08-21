@@ -6,22 +6,7 @@
 #' @export
 getPremadeNetwork <- function() {
   result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
-  impact <- list(item=0) # A list containing the influence of each data type on each connection
-  # numDrugs <- ncol(result)
-  # impact1 <- matrix(rexp(numDrugs * numDrugs, rate=.1), ncol=numDrugs)
-  # impact2 <- matrix(rexp(numDrugs * numDrugs, rate=.1), ncol=numDrugs)
-  # impact3 <- matrix(rexp(numDrugs * numDrugs, rate=.1), ncol=numDrugs)
-  # sum <- impact1 + impact2 + impact3
-  # impact1 <- as.data.frame(impact1 / sum)
-  # impact2 <- as.data.frame(impact2 / sum)
-  # impact3 <- as.data.frame(impact3 / sum)
-  # colnames(impact1) <- colnames(result)
-  # rownames(impact1) <- colnames(result)
-  # colnames(impact2) <- colnames(result)
-  # rownames(impact2) <- colnames(result)
-  # colnames(impact3) <- colnames(result)
-  # rownames(impact3) <- colnames(result)
-
+  impact <- list(item=0) # A dummy variable for the impacts of the different data types on the similarity
 
   # Generate the profile for all drugs
   drugNames <- rownames(result)
@@ -83,6 +68,10 @@ convertToURL <- function(id, drugName, database){
   }
 }
 
+findSynonyms <- function(set, drugName){
+  return(drugName %in% set)
+}
+
 #' Returns information related to a drug
 #'
 #' @param drug The name of the drug
@@ -106,8 +95,10 @@ getDrugInfo <- function(drug){
   #Get all the links to drug databases
   ids <- allDrugInfo[['ID']]
   links <- mapply(convertToURL, id = ids, drugName=allDrugInfo[['MOLECULE_NAME']], database=allDrugInfo[['DATABASE']])
+  aliases <- unlist(synonyms[mapply(findSynonyms, set=synonyms, drugName=toupper(drug))])
+  aliases <- aliases[aliases != toupper(drug)]
 
-  return(list(targets=sort(unique(drugTargets)), links=unique(links)))
+  return(list(targets=sort(unique(drugTargets)), links=unique(links), aliases=aliases))
 }
 
 #' Returns the drugs with input targets
@@ -135,13 +126,3 @@ getDrugsOfTargets <- function(targets){
 
   return(toupper(uniqueDrugs))
 }
-
-#' Test function
-#'
-#' @return A list
-#'
-#' @export
-# returnList <- function(){
-#   jaccuzi <- "split"
-#   return(list(list(zerg='zerg', shit=c(12,3,5)), c(1,2,3,4,5,6), nig="yes", $jaccuzi = 'yo'))
-# } #I should use names(lst) <- c("x", "y", "z") to set the names of all drug info objects
