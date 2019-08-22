@@ -98,6 +98,10 @@ getDrugInfo <- function(drug){
   aliases <- unlist(synonyms[mapply(findSynonyms, set=synonyms, drugName=toupper(drug))])
   aliases <- aliases[aliases != toupper(drug)]
 
+  if (is.null(aliases)) {
+    aliases <- character(0)
+  }
+
   return(list(targets=sort(unique(drugTargets)), links=unique(links), aliases=aliases))
 }
 
