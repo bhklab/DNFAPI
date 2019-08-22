@@ -1,7 +1,7 @@
 #' Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix
 #' @importFrom apcluster apcluster
 #'
-#' @return The default integrated matrix
+#' @return The default integrated network
 #'
 #' @export
 getPremadeNetwork <- function() {
@@ -21,12 +21,11 @@ getPremadeNetwork <- function() {
 #' @importFrom apcluster apcluster
 #' @import SNFtool
 #'
+#' @param ... The three types of drug data in the order of perturbation, sensitivity, and structure
 #' @return The new network
 #'
 #' @export
 getNewNetwork <- function(...) {
-  impact <- list(item=0) # A list containing the influence of each data type on each connection
-
   # Integrate the data
   dataNames <- names(list(...))
   sensitivity <- as.data.frame(list(...)[dataNames[2]], stringsAsFactors=FALSE)
@@ -52,6 +51,8 @@ getNewNetwork <- function(...) {
   # Generate the profile for all drugs
   drugNames <- rownames(integrated)
   profiles <- lapply(drugNames, getDrugInfo)
+
+  impact <- list(item=0) # A list containing the influence of each data type on each connection
 
   return(list(impact=impact, result=integrated, profiles=profiles))
 }
