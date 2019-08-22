@@ -56,6 +56,7 @@ getNewNetwork <- function(...) {
   return(list(impact=impact, result=integrated, profiles=profiles))
 }
 
+#For each drug entry (each entry will reference different databases), return the drug's URL
 convertToURL <- function(id, drugName, database){
   if (database == 'CLUE.IO'){
     return(paste0("https://clue.io/command?q=", drugName))
@@ -75,7 +76,7 @@ findSynonyms <- function(set, drugName){
 #' Returns information related to a drug
 #'
 #' @param drug The name of the drug
-#' @return The CHEMBL ID of the drug as well as a list of drug targets
+#' @return The drug's targets, links to the drug, and the drug's synonyms
 #'
 #' @export
 getDrugInfo <- function(drug){
@@ -86,18 +87,16 @@ getDrugInfo <- function(drug){
 
   #Get all rows from the drug-info dataframe that match the drug name
   allDrugInfo <- drugTargetInfo[which(drugTargetInfo[,'MOLECULE_NAME'] == drug & drugTargetInfo[,'DATABASE'] != 'CTRPv2'), ]
-  # if (nrow(allDrugInfo) == 0){
-  #   return(NULL)
-  # }
 
   drugTargets <- allDrugInfo[['TARGET_NAME']]
 
   #Get all the links to drug databases
   ids <- allDrugInfo[['ID']]
   links <- mapply(convertToURL, id = ids, drugName=allDrugInfo[['MOLECULE_NAME']], database=allDrugInfo[['DATABASE']])
+
+  #Get all the synonyms of this drug
   aliases <- unlist(synonyms[mapply(findSynonyms, set=synonyms, drugName=toupper(drug))])
   aliases <- aliases[aliases != toupper(drug)]
-
   if (is.null(aliases)) {
     aliases <- character(0)
   }
@@ -105,9 +104,9 @@ getDrugInfo <- function(drug){
   return(list(targets=sort(unique(drugTargets)), links=unique(links), aliases=aliases))
 }
 
-#' Returns the drugs with input targets
+#' Returns the list of drugs that have the specified targets
 #'
-#' @param targets The names of the drug targets
+#' @param targets The names of the targets
 #' @return A list of drugs
 #'
 #' @export
