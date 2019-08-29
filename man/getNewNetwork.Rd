@@ -6,6 +6,9 @@
 \usage{
 getNewNetwork(...)
 }
+\arguments{
+\item{...}{The three types of drug data in the order of perturbation, sensitivity, and structure}
+}
 \value{
 The new network
 }

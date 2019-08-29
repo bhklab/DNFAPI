@@ -7,7 +7,7 @@
 getPremadeNetwork()
 }
 \value{
-The default integrated matrix
+The default integrated network
 }
 \description{
 Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix

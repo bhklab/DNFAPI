@@ -1,3 +1,5 @@
+source('R/communityAugment.R')
+
 #' Returns the default integrated matrix as well as impacts of the original three modalities on the integrated matrix
 #' @importFrom apcluster apcluster
 #'
@@ -5,15 +7,20 @@
 #'
 #' @export
 getPremadeNetwork <- function() {
-  result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
-  impact <- list(item=0) # A dummy variable for the impacts of the different data types on the similarity
+  # The commented codes were for dynamically building the final JSON object that contains community and drug profile information
+  # from just the similarity matrix, but since they took too long to run I decided to just directly return the final JSON object
+  # stored in DefaultNetwork.
 
-  # Generate the profile for all drugs
-  drugNames <- rownames(result)
-  profiles <- lapply(drugNames, getDrugInfo)
-  names(profiles) <- drugNames
-
-  return(list(impact=impact, result=result, profiles=profiles))
+  # result <- as.data.frame(communityAugment(integrated80, GMT_TARG))
+  # impact <- list(item=0) # A dummy variable for the impacts of the different data types on the similarity
+  #
+  # # Generate the profile for all drugs
+  # drugNames <- rownames(result)
+  # profiles <- lapply(drugNames, getDrugInfo)
+  # names(profiles) <- drugNames
+  #
+  # return(list(impact=impact, result=result, profiles=profiles))
+  return(DefaultNetwork)
 }
 
 #' Returns a network that integrates all data modalities
@@ -74,12 +81,7 @@ findSynonyms <- function(set, drugName){
   return(drugName %in% set)
 }
 
-#' Returns information related to a drug
-#'
-#' @param drug The name of the drug
-#' @return The drug's targets, links to the drug, and the drug's synonyms
-#'
-#' @export
+# Returns information related to a drug
 getDrugInfo <- function(drug){
   badchars <- "[\xb5]|[\n]|[,]|[;]|[:]|[-]|[+]|[*]|[%]|[$]|[#]|[{]|[}]|[[]|[]]|[|]|[\\^]|[/]|[\\]|[.]|[_]|[ ]"
   drugTargetInfo$MOLECULE_NAME <- gsub(badchars, "", drugTargetInfo$MOLECULE_NAME)
@@ -105,12 +107,7 @@ getDrugInfo <- function(drug){
   return(list(targets=sort(unique(drugTargets)), links=unique(links), aliases=aliases))
 }
 
-#' Returns the list of drugs that have the specified targets
-#'
-#' @param targets The names of the targets
-#' @return A list of drugs
-#'
-#' @export
+# Returns the list of drugs that have the specified targets
 getDrugsOfTargets <- function(targets){
 
   #drugTargetInfo$MOLECULE_NAME <- gsub(badchars, "", drugTargetInfo$MOLECULE_NAME)

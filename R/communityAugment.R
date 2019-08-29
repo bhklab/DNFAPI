@@ -1,3 +1,5 @@
+library(apcluster)
+
 communityAugment <- function(network, GMT_TARG) {
 
   ## all communities from integrative analysis results for nci60/l1000 or ctrpv2/l1000
