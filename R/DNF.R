@@ -56,8 +56,9 @@ getNewNetwork <- function(...) {
   integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
 
   # Generate the profile for all drugs
-  drugNames <- rownames(integrated)
+  drugNames <- rownames(result)
   profiles <- lapply(drugNames, getDrugInfo)
+  names(profiles) <- drugNames
 
   impact <- list(item=0) # A list containing the influence of each data type on each connection
 
