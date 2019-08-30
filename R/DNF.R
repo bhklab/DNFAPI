@@ -56,7 +56,7 @@ getNewNetwork <- function(...) {
   integrated <- as.data.frame(communityAugment(integrated, GMT_TARG))
 
   # Generate the profile for all drugs
-  drugNames <- rownames(result)
+  drugNames <- rownames(integrated)
   profiles <- lapply(drugNames, getDrugInfo)
   names(profiles) <- drugNames
 
